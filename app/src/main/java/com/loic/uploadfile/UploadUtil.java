@@ -51,7 +51,6 @@ public class UploadUtil {
                 /**
                  * 当文件不为空时执行上传
                  */
-                Log.e("ok","file3");
                 DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
                 StringBuffer sb = new StringBuffer();
 
