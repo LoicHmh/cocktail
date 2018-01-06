@@ -1,7 +1,7 @@
 package com.loic.uploadfile;
 
 import android.Manifest;
-import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,13 +12,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -31,8 +31,10 @@ import java.util.Map;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static android.app.Activity.RESULT_OK;
+
 @RuntimePermissions
-public class UploadActivity extends Activity implements OnClickListener{
+public class UploadFragment extends Fragment implements OnClickListener{
     private static String IP="192.168.1.112";
     private static String requestURL = "http://"+IP+":8080/transfer_server";
     private Button  uploadImage,downloadImage;
@@ -51,7 +53,7 @@ public class UploadActivity extends Activity implements OnClickListener{
             switch (msg.what){
                 case 1:
                     final String pic_url=msg.obj.toString();
-                    Toast.makeText(UploadActivity.this,pic_url,Toast.LENGTH_LONG).show();
+                    //Toast.makeText(UploadFragment.this,pic_url,Toast.LENGTH_LONG).show();
                     new Thread(new Runnable(){
                         @Override
                         public void run(){
@@ -64,20 +66,21 @@ public class UploadActivity extends Activity implements OnClickListener{
 
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)  {
+        //super.onCreate(savedInstanceState);
+        View v= inflater.inflate(R.layout.fragment_upload,container,false);
 
-        selectImage = (ImageButton) this.findViewById(R.id.selectImage);
-        modelButton1 = (ImageButton) this.findViewById(R.id.model1);
-        modelButton2 = (ImageButton) this.findViewById(R.id.model2);
-        modelButton3 = (ImageButton) this.findViewById(R.id.model3);
-        modelButton4 = (ImageButton) this.findViewById(R.id.model4);
-        modelButton5 = (ImageButton) this.findViewById(R.id.model5);
-        modelButton6 = (ImageButton) this.findViewById(R.id.model6);
+        selectImage = (ImageButton) v.findViewById(R.id.selectImage);
+        modelButton1 = (ImageButton) v.findViewById(R.id.model1);
+        modelButton2 = (ImageButton) v.findViewById(R.id.model2);
+        modelButton3 = (ImageButton) v.findViewById(R.id.model3);
+        modelButton4 = (ImageButton) v.findViewById(R.id.model4);
+        modelButton5 = (ImageButton) v.findViewById(R.id.model5);
+        modelButton6 = (ImageButton) v.findViewById(R.id.model6);
 
-        uploadImage = (Button) this.findViewById(R.id.uploadImage);
-        downloadImage = (Button) this.findViewById(R.id.downloadImage);
+        uploadImage = (Button) v.findViewById(R.id.uploadImage);
+        downloadImage = (Button) v.findViewById(R.id.downloadImage);
         selectImage.setOnClickListener(this);
         modelButton1.setOnClickListener(this);
         modelButton2.setOnClickListener(this);
@@ -88,9 +91,10 @@ public class UploadActivity extends Activity implements OnClickListener{
 
         uploadImage.setOnClickListener(this);
         downloadImage.setOnClickListener(this);
-        imageView = (ImageView) this.findViewById(R.id.imageView);
-        imageView2 = (ImageView) this.findViewById(R.id.imageView2);
+        imageView = (ImageView) v.findViewById(R.id.imageView);
+        imageView2 = (ImageView) v.findViewById(R.id.imageView2);
 
+        return v;
     }
 
     @Override
@@ -108,7 +112,7 @@ public class UploadActivity extends Activity implements OnClickListener{
                 break;
             case R.id.uploadImage:
                 if (picPath == null) {
-                    Toast.makeText(UploadActivity.this, "请选择图片！", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(UploadFragment.this, "请选择图片！", Toast.LENGTH_SHORT).show();
                 } else {
                     final File file = new File(picPath);
                     if (file != null) {
@@ -127,13 +131,13 @@ public class UploadActivity extends Activity implements OnClickListener{
                 }
                 break;
             case R.id.downloadImage:
-                Toast.makeText(UploadActivity.this, "ok！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(UploadFragment.this, "ok！", Toast.LENGTH_SHORT).show();
                 String picname="P1.jpeg";
                 //final String url1="http://"+IP+":8080/transfer_server?request="+picname+"&usrname="+"hmh"+"&password="+"loic";
                 final String url1="http://192.168.1.112:8080/transfer_server?request=P1.jpeg&usrname=hmh&password=loic";
                 //final String pic_url=doGet(url1);
                 doGet(url1);
-                //Toast.makeText(UploadActivity.this,pic_url,Toast.LENGTH_LONG).show();
+                //Toast.makeText(UploadFragment.this,pic_url,Toast.LENGTH_LONG).show();
                 //http://10.163.97.10:8080/transfer_server?request=timg.jpg
 
                 break;
@@ -172,26 +176,26 @@ public class UploadActivity extends Activity implements OnClickListener{
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             //查询我们需要的数据
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picPath = cursor.getString(columnIndex);
             //imageView2.setImageBitmap(BitmapFactory.decodeFile(picPath));
             selectImage.setImageBitmap(BitmapFactory.decodeFile(picPath));
-            //Toast.makeText(UploadActivity.this, "picPath:"+picPath, Toast.LENGTH_LONG).show();
+            //Toast.makeText(UploadFragment.this, "picPath:"+picPath, Toast.LENGTH_LONG).show();
             cursor.close();
         }
     }
 
 
-    @Override
+ /*   @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
             //GGView.enable=false;
             System.exit(0);
         }
         return true;
-    }
+    }*/
 
     public void downloadBitmap(String bmurl,final ImageView iv)    //bmurl是解析出来的utl， iv是显示图片的imageView控件
     {
@@ -206,7 +210,7 @@ public class UploadActivity extends Activity implements OnClickListener{
             bis=new BufferedInputStream(connection.getInputStream());
             bm= BitmapFactory.decodeStream(bis);
             final Bitmap bm1 = bm;
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     iv.setImageBitmap(bm1);
@@ -235,10 +239,10 @@ public class UploadActivity extends Activity implements OnClickListener{
                 final String state=NetUtil.loginOfGet(url);
 
                 //执行在主线程上
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         //就是在主线程上操作,弹出结果
-                        //Toast.makeText(UploadActivity.this, state, 0).show();
+                        //Toast.makeText(UploadFragment.this, state, 0).show();
                         Message msg = new Message();
                         msg.what=1;
                         msg.obj=state;
