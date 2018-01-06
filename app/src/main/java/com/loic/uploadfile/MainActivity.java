@@ -19,11 +19,11 @@ import java.util.List;
 public class MainActivity extends FragmentActivity {
 
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    public ViewPager viewPager;
 
-    private List<Fragment> list;
+    public static List<Fragment> list;
     private MyAdapter adapter;
-    private String[] titles = {"用户", "图库","上传","圈子"};
+    private String[] titles = {"用户", "图库","上传"};
 
 
     @Override
@@ -37,9 +37,8 @@ public class MainActivity extends FragmentActivity {
         //页面，数据源
         list = new ArrayList<>();
         list.add(new SignInFragment());
-        list.add(new GalleryFragment());
-        list.add(new UploadFragment());
         list.add(new FriendsFragment());
+        list.add(new UploadFragment());
         //ViewPager的适配器
         FragmentManager fm = getSupportFragmentManager();
         adapter = new MyAdapter(fm);

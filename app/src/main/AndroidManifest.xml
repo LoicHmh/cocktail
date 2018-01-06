@@ -20,6 +20,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".UnfoldableDetailsActivity"
+                  android:theme="@style/Translucent">
+        </activity>
+        <activity android:name=".FoldableListActivity"
+            android:theme="@style/Translucent">
+        </activity>
     </application>
 
 </manifest>

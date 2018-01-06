@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">cOcktAiL</string>
+    <string name="year">Year</string>
+    <string name="location">Location</string>
 </resources>

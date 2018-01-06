@@ -16,10 +16,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.fragment_gallery,container,false);
-       /* TextView textView = new TextView(getActivity());
-        textView.setGravity(Gravity.CENTER);
-        textView.setText("第三个Fragment");
-        textView.setTextSize(30);*/
+
         return v;
     }
 
