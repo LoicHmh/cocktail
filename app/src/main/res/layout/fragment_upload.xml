@@ -4,32 +4,14 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TextView
-        android:id="@+id/upload_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="nothing"/>
-
 
     <ImageButton
         android:id="@+id/selectImage"
         android:layout_width="match_parent"
-        android:layout_height="142dp"
-        android:src="@drawable/upload"
-        android:layout_weight="0.09" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="上传图片"
-        android:id="@+id/uploadImage"
-        />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="下载图片"
-        android:id="@+id/downloadImage"/>
+        android:layout_height="275dp"
+        android:layout_marginTop="60dp"
+        android:layout_weight="0.84"
+        android:src="@drawable/upload" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -37,70 +19,57 @@
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/model1"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/model" />
+            android:scaleType="fitXY"
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:src="@drawable/la_muse" />
 
         <ImageButton
             android:id="@+id/model2"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/model" />
+            android:scaleType="fitXY"
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:src="@drawable/rain_princess" />
+
         <ImageButton
             android:id="@+id/model3"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/model"
-            />
+            android:scaleType="fitXY"
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:src="@drawable/scream" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageButton
             android:id="@+id/model4"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/model" />
+            android:scaleType="fitXY"
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:src="@drawable/udnie" />
 
         <ImageButton
             android:id="@+id/model5"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/model" />
+            android:scaleType="fitXY"
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:src="@drawable/wave" />
+
         <ImageButton
             android:id="@+id/model6"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/model"
-            />
+            android:scaleType="fitXY"
+            android:layout_width="122dp"
+            android:layout_height="122dp"
+            android:src="@drawable/wreck" />
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/uploadImage"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-       <ImageView
-           android:layout_width="125dp"
-           android:layout_height="125dp"
-           android:layout_margin="1dp"
-           android:id="@+id/imageView"
-           android:src="@drawable/model"
-           />
-        <ImageView
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_margin="1dp"
-            android:id="@+id/imageView2"
-            android:src="@drawable/model"
-            />
-        </LinearLayout>
+        android:text="上传图片" />
 </LinearLayout>
