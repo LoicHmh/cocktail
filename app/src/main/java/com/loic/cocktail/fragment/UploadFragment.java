@@ -167,6 +167,7 @@ public class UploadFragment extends Fragment implements OnClickListener{
                 break;
             case R.id.model4:
                 modelSelected="udnie";
+
                 break;
             case R.id.model5:
                 modelSelected="wave";

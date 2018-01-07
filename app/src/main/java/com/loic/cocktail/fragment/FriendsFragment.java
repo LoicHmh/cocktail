@@ -1,18 +1,12 @@
 package com.loic.cocktail.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loic.cocktail.FoldableListActivity;
 import com.loic.cocktail.MainActivity;
@@ -23,14 +17,6 @@ import com.loic.cocktail.util.NetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by 胡敏浩 on 2017/10/23.
@@ -39,7 +25,10 @@ import java.net.URLConnection;
 public class FriendsFragment extends Fragment {
     private ImageButton friendButton;
     private ImageButton galleryButton;
-    private TextView textView;
+
+    private String getFriend;
+    private String getMySelf;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,8 +42,9 @@ public class FriendsFragment extends Fragment {
         }
 
         View v= inflater.inflate(R.layout.fragment_friends,container,false);
-        textView=(TextView) v.findViewById(R.id.friend_text);
-        textView.setText("nothing at all");
+
+        final String url1="http://192.168.1.112:8080/transfer_server?type=2";
+        doGet(url1);
 
 
         friendButton = (ImageButton) v.findViewById(R.id.friend_btn);
@@ -63,26 +53,7 @@ public class FriendsFragment extends Fragment {
                 updateUsrInfo();
                 Intent intent=new Intent();
                 intent.setClass(getActivity(),UnfoldableDetailsActivity.class);
-
-                String picname="P1.jpeg";
-                final String url1="http://192.168.1.112:8080/transfer_server?request=P1.jpeg&usrname=hmh&password=loic";
-                doGet(url1);
-
-                JSONArray photoInfoList;
-                JSONObject photoInfo = new JSONObject();
-                try{
-                    photoInfo.put("usrname","hmh");
-                    photoInfo.put("picname","天气真好");
-                    photoInfo.put("photoAddress","https://img.alicdn.com/imgextra/i2/880734502/TB2bfW7sSFjpuFjSspbXXXagVXa-880734502.jpg");
-                    photoInfo.put("good",10);
-                    photoInfoList = new JSONArray();
-                    for (int i=0;i<10;i++){
-                        photoInfoList.put(i,photoInfo.toString());
-                    }
-                    intent.putExtra("photoInfoList",photoInfoList.toString());
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
+                intent.putExtra("photoInfoList",getFriend);
                 getActivity().startActivity(intent);
             }
         });
@@ -93,35 +64,15 @@ public class FriendsFragment extends Fragment {
                 updateUsrInfo();
                 Intent intent=new Intent();
                 intent.setClass(getActivity(),FoldableListActivity.class);
-                JSONArray photoInfoList;
-                JSONObject photoInfo = new JSONObject();
-                try{
-                    photoInfo.put("usrname","hmh");
-                    photoInfo.put("picname","天气真好");
-                    photoInfo.put("photoAddress","https://img.alicdn.com/imgextra/i2/880734502/TB2bfW7sSFjpuFjSspbXXXagVXa-880734502.jpg");
-                    photoInfo.put("good",10);
-                    photoInfoList = new JSONArray();
-                    for (int i=0;i<10;i++){
-                        photoInfoList.put(i,photoInfo.toString());
-                    }
-                    intent.putExtra("photoInfoList",photoInfoList.toString());
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-
+                intent.putExtra("photoInfoList",getMySelf);
                 getActivity().startActivity(intent);
             }
         });
-
-
-        EventBus.getDefault().post(new MyEvent("lalal",0));
-
         return v;
     }
 
     public String updateUsrInfo(){
         MainActivity mainActivity = (MainActivity) getActivity();
-        textView.setText(mainActivity.getInfo());
         return mainActivity.getInfo();
     }
 
@@ -140,24 +91,17 @@ public class FriendsFragment extends Fragment {
                 });
             }
         }).start();
-
     }
 
     @Subscribe
     public void onEventMainThread(MyEvent myEvent){
         int tag=myEvent.getTag();
         String msg = myEvent.getMsg();
-        if (tag == 2){
-            final String pic_url = msg;
-            Toast.makeText(getActivity(),pic_url,Toast.LENGTH_LONG).show();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //downloadBitmap(pic_url, imageView2);
-                }
-            }).start();
+        if (tag == 5){
+            getFriend=msg;
+        } else if (tag == 6){
+            getMySelf=msg;
         }
-
     }
 
     @Override
@@ -165,39 +109,4 @@ public class FriendsFragment extends Fragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
-
-    public void downloadBitmap(String bmurl,final ImageView iv)    //bmurl是解析出来的utl， iv是显示图片的imageView控件
-    {
-        Log.d("download","bitmap");
-
-        Bitmap bm=null;
-        InputStream is =null;
-        BufferedInputStream bis=null;
-        try{
-            URL url=new URL(bmurl);
-            URLConnection connection=url.openConnection();
-            bis=new BufferedInputStream(connection.getInputStream());
-            bm= BitmapFactory.decodeStream(bis);
-            final Bitmap bm1 = bm;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    iv.setImageBitmap(bm1);
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if(bis!=null)
-                    bis.close();
-                if (is!=null)
-                    is.close();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

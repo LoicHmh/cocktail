@@ -70,7 +70,7 @@ public class PaintingsAdapter extends ItemsAdapter<Painting, PaintingsAdapter.Vi
         if (activity instanceof UnfoldableDetailsActivity) {
             ((UnfoldableDetailsActivity) activity).openDetails(view, item);
         } else if (activity instanceof FoldableListActivity) {
-            Toast.makeText(activity, item.getTitle(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "作品名称："+item.getTitle()+" 所用风格："+ item.getStyle(), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -106,13 +106,21 @@ public class UnfoldableDetailsActivity extends AppCompatActivity {
         SpannableBuilder builder = new SpannableBuilder(this);
         builder
                 .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
-                .append(R.string.year).append(": ")
+                .append("作品名称").append(": ")
                 .clearStyle()
                 .append(painting.getTitle()).append("\n")
                 .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
-                .append(R.string.location).append(": ")
+                .append("所用风格").append(": ")
                 .clearStyle()
-                .append(painting.getImageAddress());
+                .append(painting.getStyle()).append("\n")
+                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
+                .append("作者名称").append(": ")
+                .clearStyle()
+                .append(painting.getUsrname()).append("\n")
+                .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
+                .append("已获赞数").append(": ")
+                .clearStyle()
+                .append(""+painting.getGood());
         description.setText(builder.build());
 
         unfoldableView.unfold(coverView, detailsLayout);

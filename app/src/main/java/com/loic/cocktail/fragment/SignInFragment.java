@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.loic.cocktail.MainActivity;
 import com.loic.cocktail.R;
 import com.loic.cocktail.eventbus.MyEvent;
+import com.loic.cocktail.util.NetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -134,23 +135,39 @@ public class SignInFragment extends Fragment {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-
-                        //Toast.makeText(getActivity(),"usrname:"+usrname+" password:"+password,Toast.LENGTH_LONG).show();
                         usrnameEditText.setFocusable(false);
                         usrnameEditText.setFocusableInTouchMode(false);
-                        //usrnameEditText.setKeyListener(null);
                         passwordEditText.setFocusable(false);
                         passwordEditText.setFocusableInTouchMode(false);
                         passwordLayout.setVisibility(View.INVISIBLE);
-                       // passwordEditText.setKeyListener(null);
-                        EventBus.getDefault().post(new MyEvent("ONLINE",0));
-                        EventBus.getDefault().post(new MyEvent(usrInfoJson.toString(),1));
+                        EventBus.getDefault().post(new MyEvent("ONLINE",0));//传给mainActivity
+                        EventBus.getDefault().post(new MyEvent(usrInfoJson.toString(),1));//传给mainActivity
+
+                        final String url1="http://192.168.1.112:8080/transfer_server?type=1&usrname="+usrname+"&password="+password;
+                        doGet(url1);
                         break;
                 }
             }
         });
-
         return v;
+    }
+
+    public void  doGet(final String url){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //访问网络要在子线程中实现，使用get取数据
+                final String state= NetUtil.loginOfGet(url);
+
+                //执行在主线程上
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        EventBus.getDefault().post(new MyEvent(state,6));
+                    }
+                });
+            }
+        }).start();
+
     }
 
 }

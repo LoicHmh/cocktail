@@ -7,17 +7,32 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Painting {
-
-
-
     private final String imageAddress;
     private final String title;
 
+    private final String usrname;
+    private final String style;
+    private final int good;
 
-    private Painting(String imageAddress, String title) {
+
+    private Painting(String imageAddress, String title, int good, String usrname, String style) {
         this.imageAddress = imageAddress;
         this.title = title;
+        this.good = good;
+        this.usrname = usrname;
+        this.style = style;
+    }
 
+    public String getUsrname() {
+        return usrname;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public int getGood() {
+        return good;
     }
 
     public String getImageAddress() {
@@ -39,7 +54,10 @@ public class Painting {
                 JSONObject photoInfo = new JSONObject(photoInfoJsonStr);
                 String picname=photoInfo.getString("picname");
                 String photoAddress = photoInfo.getString("photoAddress");
-                Painting painting = new Painting(photoAddress,picname);
+                String usrname=photoInfo.getString("usrname");
+                String style = photoInfo.getString("style");
+                int good = photoInfo.getInt("good");
+                Painting painting = new Painting(photoAddress,picname,good,usrname,style);
                 paintings.add(painting);
             }
         }catch (JSONException e){
