@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +14,9 @@ import com.alexvasilkov.android.commons.texts.SpannableBuilder;
 import com.alexvasilkov.android.commons.ui.Views;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.alexvasilkov.foldablelayout.shading.GlanceFoldShading;
+import com.loic.cocktail.helper.GlideHelper;
+import com.loic.cocktail.helper.Painting;
+import com.loic.cocktail.helper.PaintingsAdapter;
 
 public class UnfoldableDetailsActivity extends AppCompatActivity {
 

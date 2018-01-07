@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail.helper;
 
 import android.widget.ImageView;
 

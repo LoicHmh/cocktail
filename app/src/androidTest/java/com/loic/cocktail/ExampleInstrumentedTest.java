@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

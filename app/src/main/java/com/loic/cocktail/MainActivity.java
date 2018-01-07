@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail;
 
 /**
  * Created by 胡敏浩 on 2018/1/6.
@@ -12,6 +12,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.loic.cocktail.eventbus.MyEvent;
+import com.loic.cocktail.fragment.FriendsFragment;
+import com.loic.cocktail.fragment.SignInFragment;
+import com.loic.cocktail.fragment.UploadFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +31,10 @@ public class MainActivity extends FragmentActivity {
 
     public static List<Fragment> list;
     private MyAdapter adapter;
-    private String[] titles = {"用户", "图库","上传"};
+    private String[] titles = {"用户", "图库","上传",};
+
+    private String info="";
+    private int state = 0;
 
 
     @Override
@@ -46,10 +57,32 @@ public class MainActivity extends FragmentActivity {
         //绑定
         tabLayout.setupWithViewPager(viewPager);
 
+        //利用EventBus进行两个Fragment之间的通信
+        //注册EventBus
+        try{
+            EventBus.getDefault().register(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //getWindow().setFormat(PixelFormat.RGBX_8888);
     }
 
+    public String getInfo(){
+        return info;
+    }
+
+    public void setInfo(String info){
+        this.info=info;
+    }
+
+    public int getState(){
+        return state;
+    }
+
+    public void setState(int state){
+        this.state=state;
+    }
 
 
     class MyAdapter extends FragmentPagerAdapter {
@@ -74,4 +107,24 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Subscribe
+    public void onEventMainThread(MyEvent myEvent){
+        int tag=myEvent.getTag();
+        String msg = myEvent.getMsg();
+        if (tag == 1){
+            this.setInfo(msg);
+        }else if (tag == 0){
+            if (msg=="ONLINE")
+                this.setState(1);
+            else
+                this.setState(0);
+        }
+    }
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

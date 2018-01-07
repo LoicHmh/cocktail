@@ -1,7 +1,9 @@
-package com.loic.uploadfile;
+package com.loic.cocktail.helper;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+
+import com.loic.cocktail.R;
 
 public class Painting {
 

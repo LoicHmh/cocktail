@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail;
 
 import org.junit.Test;
 

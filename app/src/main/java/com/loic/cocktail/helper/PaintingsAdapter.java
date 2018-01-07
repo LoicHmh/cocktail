@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail.helper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.widget.Toast;
 import com.alexvasilkov.android.commons.adapters.ItemsAdapter;
 import com.alexvasilkov.android.commons.ui.ContextHelper;
 import com.alexvasilkov.android.commons.ui.Views;
+import com.loic.cocktail.FoldableListActivity;
+import com.loic.cocktail.R;
+import com.loic.cocktail.UnfoldableDetailsActivity;
 
 import java.util.Arrays;
 
@@ -37,17 +40,6 @@ public class PaintingsAdapter extends ItemsAdapter<Painting, PaintingsAdapter.Vi
         holder.title.setText(item.getTitle());
     }
 
-/*    @Override
-    public void onClick(View view) {
-        final Painting item = (Painting) view.getTag(R.id.list_item_image);
-        MainActivity mainActivity= (MainActivity) view.getContext();
-        int index = mainActivity.viewPager.getCurrentItem();
-        //"android:switcher:" + R.id.viewpager + ":"+item 这个字符窜表示的就是该//fragment的tag，其中item 是fragment 在viewpager中的位置。
-        //Fragment fragment = theActivity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":"+item);
-        Fragment fragment = mainActivity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":"+item);
-        ((FriendsFragment) fragment).openDetails(view, item);
-
-    }*/
 
     @Override
     public void onClick(View view) {

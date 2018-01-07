@@ -1,10 +1,11 @@
-package com.loic.uploadfile;
+package com.loic.cocktail;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alexvasilkov.android.commons.ui.Views;
 import com.alexvasilkov.foldablelayout.FoldableListLayout;
+import com.loic.cocktail.helper.PaintingsAdapter;
 
 public class FoldableListActivity extends AppCompatActivity {
 

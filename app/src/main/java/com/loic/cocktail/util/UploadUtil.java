@@ -1,4 +1,4 @@
-package com.loic.uploadfile;
+package com.loic.cocktail.util;
 
 /**
  * Created by 胡敏浩 on 2017/12/19.

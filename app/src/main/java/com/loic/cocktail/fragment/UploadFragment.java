@@ -1,16 +1,14 @@
-package com.loic.uploadfile;
+package com.loic.cocktail.fragment;
 
 import android.Manifest;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loic.cocktail.MainActivity;
+import com.loic.cocktail.R;
+import com.loic.cocktail.eventbus.MyEvent;
+import com.loic.cocktail.util.NetUtil;
+import com.loic.cocktail.util.UploadUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -42,33 +54,17 @@ public class UploadFragment extends Fragment implements OnClickListener{
     private ImageButton modelButton1,modelButton2,modelButton3,modelButton4,modelButton5,modelButton6;
     private ImageView imageView,imageView2;
     private static int RESULT_LOAD_IMAGE = 10;
+    private JSONObject usrInfoJson;
+    private TextView textView;
 
 
     private String picPath = null;
     private String modelSelected=null;
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            switch (msg.what){
-                case 1:
-                    final String pic_url=msg.obj.toString();
-                    //Toast.makeText(UploadFragment.this,pic_url,Toast.LENGTH_LONG).show();
-                    new Thread(new Runnable(){
-                        @Override
-                        public void run(){
-                            downloadBitmap(pic_url,imageView2);
-                        }
-                    }).start();
-            }
-        }
-    };
-
     /** Called when the activity is first created. */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
-        //super.onCreate(savedInstanceState);
         View v= inflater.inflate(R.layout.fragment_upload,container,false);
 
         selectImage = (ImageButton) v.findViewById(R.id.selectImage);
@@ -94,11 +90,32 @@ public class UploadFragment extends Fragment implements OnClickListener{
         imageView = (ImageView) v.findViewById(R.id.imageView);
         imageView2 = (ImageView) v.findViewById(R.id.imageView2);
 
+        textView = (TextView) v.findViewById(R.id.upload_text);
+        textView.setText("nothing at all");
+        MainActivity mainActivity = (MainActivity) getActivity();
+        textView.setText(mainActivity.getInfo());
+
+
+        //利用EventBus进行两个Fragment之间的通信
+        //注册EventBus
+        try{
+            EventBus.getDefault().register(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return v;
     }
 
     @Override
     public void onClick(View v) {
+        String usrInfo=updateUsrInfo();
+        try {
+            usrInfoJson = new JSONObject(usrInfo);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
         switch (v.getId()) {
             case R.id.selectImage:
                 /***
@@ -121,8 +138,12 @@ public class UploadFragment extends Fragment implements OnClickListener{
                             public void run() {
                                 Map<String, String> params = new HashMap<>();
                                 //设置编码类型为utf-8
-                                params.put("usrname", "hmh");
-                                params.put("password", "loic");
+                                try {
+                                    params.put("usrname", usrInfoJson.getString("usrname"));
+                                    params.put("password", usrInfoJson.getString("password"));
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                }
                                 params.put("model",modelSelected);
                                 int request = UploadUtil.uploadFile(file, requestURL,params);
                             }
@@ -188,15 +209,6 @@ public class UploadFragment extends Fragment implements OnClickListener{
     }
 
 
- /*   @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            //GGView.enable=false;
-            System.exit(0);
-        }
-        return true;
-    }*/
-
     public void downloadBitmap(String bmurl,final ImageView iv)    //bmurl是解析出来的utl， iv是显示图片的imageView控件
     {
         Log.d("download","bitmap");
@@ -236,17 +248,19 @@ public class UploadFragment extends Fragment implements OnClickListener{
             @Override
             public void run() {
                 //访问网络要在子线程中实现，使用get取数据
-                final String state=NetUtil.loginOfGet(url);
+                final String state= NetUtil.loginOfGet(url);
 
                 //执行在主线程上
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         //就是在主线程上操作,弹出结果
                         //Toast.makeText(UploadFragment.this, state, 0).show();
-                        Message msg = new Message();
+                       /* Message msg = new Message();
                         msg.what=1;
                         msg.obj=state;
-                        handler.sendMessage(msg);
+                        handler.sendMessage(msg);*/
+
+                       EventBus.getDefault().post(new MyEvent(state,2));
                     }
                 });
             }
@@ -254,5 +268,32 @@ public class UploadFragment extends Fragment implements OnClickListener{
 
     }
 
+    @Subscribe
+    public void onEventMainThread(MyEvent myEvent){
+        int tag=myEvent.getTag();
+        String msg = myEvent.getMsg();
+        if (tag == 2){
+            final String pic_url = msg;
+            Toast.makeText(getActivity(),pic_url,Toast.LENGTH_LONG).show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    downloadBitmap(pic_url, imageView2);
+                }
+            }).start();
+        }
+
+    }
+
+    public String updateUsrInfo(){
+        MainActivity mainActivity = (MainActivity) getActivity();
+        return mainActivity.getInfo();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
 }
