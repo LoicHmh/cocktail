@@ -15,13 +15,30 @@ import com.loic.cocktail.FoldableListActivity;
 import com.loic.cocktail.R;
 import com.loic.cocktail.UnfoldableDetailsActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.Arrays;
 
 public class PaintingsAdapter extends ItemsAdapter<Painting, PaintingsAdapter.ViewHolder>
         implements View.OnClickListener {
 
+    private String photoInfoList;
+    private JSONArray photoInfoJsonArray;
+
     public PaintingsAdapter(Context context) {
-        setItemsList(Arrays.asList(Painting.getAllPaintings(context.getResources())));
+
+        if (context instanceof UnfoldableDetailsActivity) {
+            this.photoInfoList =((UnfoldableDetailsActivity) context).getPhotoInfoList();
+        } else if (context instanceof FoldableListActivity) {
+            this.photoInfoList =((FoldableListActivity) context).getPhotoInfoList();
+        }
+        try {
+            photoInfoJsonArray = new JSONArray(photoInfoList);
+            setItemsList(Arrays.asList(Painting.getAllPaintings(photoInfoJsonArray.toString())));
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -34,12 +51,16 @@ public class PaintingsAdapter extends ItemsAdapter<Painting, PaintingsAdapter.Vi
     @Override
     protected void onBindHolder(ViewHolder holder, int position) {
         final Painting item = getItem(position);
-
+        String photoInfo="";
+        try {
+            photoInfo = photoInfoJsonArray.getString(position);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
         holder.image.setTag(R.id.list_item_image, item);
-        GlideHelper.loadPaintingImage(holder.image, item);
+        GlideHelper.loadPaintingImage(holder.image, photoInfo);
         holder.title.setText(item.getTitle());
     }
-
 
     @Override
     public void onClick(View view) {

@@ -152,15 +152,9 @@ public class UploadFragment extends Fragment implements OnClickListener{
                 }
                 break;
             case R.id.downloadImage:
-                //Toast.makeText(UploadFragment.this, "ok！", Toast.LENGTH_SHORT).show();
                 String picname="P1.jpeg";
-                //final String url1="http://"+IP+":8080/transfer_server?request="+picname+"&usrname="+"hmh"+"&password="+"loic";
                 final String url1="http://192.168.1.112:8080/transfer_server?request=P1.jpeg&usrname=hmh&password=loic";
-                //final String pic_url=doGet(url1);
                 doGet(url1);
-                //Toast.makeText(UploadFragment.this,pic_url,Toast.LENGTH_LONG).show();
-                //http://10.163.97.10:8080/transfer_server?request=timg.jpg
-
                 break;
             case R.id.model1:
                 modelSelected="la_muse";
@@ -253,13 +247,6 @@ public class UploadFragment extends Fragment implements OnClickListener{
                 //执行在主线程上
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        //就是在主线程上操作,弹出结果
-                        //Toast.makeText(UploadFragment.this, state, 0).show();
-                       /* Message msg = new Message();
-                        msg.what=1;
-                        msg.obj=state;
-                        handler.sendMessage(msg);*/
-
                        EventBus.getDefault().post(new MyEvent(state,2));
                     }
                 });

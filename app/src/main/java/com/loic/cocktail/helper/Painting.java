@@ -1,12 +1,60 @@
 package com.loic.cocktail.helper;
 
-import android.content.res.Resources;
-import android.content.res.TypedArray;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.loic.cocktail.R;
+import java.util.ArrayList;
 
 public class Painting {
 
+
+
+    private final String imageAddress;
+    private final String title;
+
+
+    private Painting(String imageAddress, String title) {
+        this.imageAddress = imageAddress;
+        this.title = title;
+
+    }
+
+    public String getImageAddress() {
+        return imageAddress;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+
+    public static Painting[] getAllPaintings(String jsonArrayStr) {
+        ArrayList<Painting> paintings = new ArrayList<Painting>();
+        JSONArray jsonArray;
+        try {
+            jsonArray=new JSONArray(jsonArrayStr);
+            for (int i=0; i<jsonArray.length();i++){
+                String photoInfoJsonStr = jsonArray.getString(i);
+                JSONObject photoInfo = new JSONObject(photoInfoJsonStr);
+                String picname=photoInfo.getString("picname");
+                String photoAddress = photoInfo.getString("photoAddress");
+                Painting painting = new Painting(photoAddress,picname);
+                paintings.add(painting);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        Painting[] rst = paintings.toArray(new Painting[paintings.size()]);
+
+        return rst;
+    }
+
+}
+
+
+/*
     private final int imageId;
     private final String title;
     private final String year;
@@ -50,8 +98,5 @@ public class Painting {
         }
 
         images.recycle();
-
         return paintings;
-    }
-
-}
+    }*/

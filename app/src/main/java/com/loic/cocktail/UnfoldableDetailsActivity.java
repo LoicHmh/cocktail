@@ -1,5 +1,6 @@
 package com.loic.cocktail;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -23,12 +24,24 @@ public class UnfoldableDetailsActivity extends AppCompatActivity {
     private View listTouchInterceptor;
     private View detailsLayout;
     private UnfoldableView unfoldableView;
+    public String getPhotoInfoList() {
+        return photoInfoList;
+    }
+
+    public void setPhotoInfoList(String photoInfoList) {
+        this.photoInfoList = photoInfoList;
+    }
+
+    private String photoInfoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unfoldable_details);
        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        photoInfoList = intent.getStringExtra("photoInfoList");
 
         ListView listView = Views.find(this, R.id.list_view);
         listView.setAdapter(new PaintingsAdapter(this));
@@ -84,7 +97,10 @@ public class UnfoldableDetailsActivity extends AppCompatActivity {
         final TextView title = Views.find(detailsLayout, R.id.details_title);
         final TextView description = Views.find(detailsLayout, R.id.details_text);
 
-        GlideHelper.loadPaintingImage(image, painting);
+        //GlideHelper.loadPaintingImage(image, painting);
+
+        GlideHelper.loadPaintingImage(image,painting);
+
         title.setText(painting.getTitle());
 
         SpannableBuilder builder = new SpannableBuilder(this);
@@ -92,11 +108,11 @@ public class UnfoldableDetailsActivity extends AppCompatActivity {
                 .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
                 .append(R.string.year).append(": ")
                 .clearStyle()
-                .append(painting.getYear()).append("\n")
+                .append(painting.getTitle()).append("\n")
                 .createStyle().setFont(Typeface.DEFAULT_BOLD).apply()
                 .append(R.string.location).append(": ")
                 .clearStyle()
-                .append(painting.getLocation());
+                .append(painting.getImageAddress());
         description.setText(builder.build());
 
         unfoldableView.unfold(coverView, detailsLayout);
