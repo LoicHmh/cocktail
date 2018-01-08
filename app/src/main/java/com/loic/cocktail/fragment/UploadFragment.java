@@ -34,7 +34,7 @@ import static android.app.Activity.RESULT_OK;
 
 @RuntimePermissions
 public class UploadFragment extends Fragment implements OnClickListener{
-    private static String IP="192.168.1.112";
+    private static String IP="10.163.9.37";
     private static String requestURL = "http://"+IP+":8080/transfer_server";
     private Button  uploadImage;
     private ImageButton selectImage;
@@ -119,6 +119,7 @@ public class UploadFragment extends Fragment implements OnClickListener{
                                 int request = UploadUtil.uploadFile(file, requestURL,params);
                             }
                         }).start();
+                        Toast.makeText(getActivity(), "上传成功！", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

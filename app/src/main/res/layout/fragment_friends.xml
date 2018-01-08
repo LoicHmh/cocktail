@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/b">
 
     <ImageButton
         android:id="@+id/friend_btn"
-        android:src="@drawable/sunflowers"
         android:layout_width="fill_parent"
         android:layout_height="250dp"
         android:layout_marginTop="60dp"
         android:scaleType="centerCrop"
-        />
+        android:src="@drawable/giamtoic"
+        android:background="@color/transparent"/>
+
     <ImageButton
         android:id="@+id/gallery_btn"
-        android:src="@drawable/cafe_terrace"
+        android:src="@drawable/bodega"
         android:layout_width="fill_parent"
         android:layout_marginTop="30dp"
         android:layout_height="250dp"
         android:scaleType="centerCrop"
+        android:background="@color/transparent"
         />
 </LinearLayout>

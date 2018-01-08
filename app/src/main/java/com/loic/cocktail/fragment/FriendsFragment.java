@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.loic.cocktail.FoldableListActivity;
 import com.loic.cocktail.MainActivity;
@@ -23,6 +24,7 @@ import org.greenrobot.eventbus.Subscribe;
  */
 
 public class FriendsFragment extends Fragment {
+    private static String IP="10.163.9.37";
     private ImageButton friendButton;
     private ImageButton galleryButton;
 
@@ -43,7 +45,7 @@ public class FriendsFragment extends Fragment {
 
         View v= inflater.inflate(R.layout.fragment_friends,container,false);
 
-        final String url1="http://192.168.1.112:8080/transfer_server?type=2";
+        final String url1="http://"+IP+":8080/transfer_server?type=2";
         doGet(url1);
 
 
@@ -62,10 +64,14 @@ public class FriendsFragment extends Fragment {
         galleryButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 updateUsrInfo();
-                Intent intent=new Intent();
-                intent.setClass(getActivity(),FoldableListActivity.class);
-                intent.putExtra("photoInfoList",getMySelf);
-                getActivity().startActivity(intent);
+                if (getMySelf==null){
+                    Toast.makeText(getActivity(),"找不到图片！",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), FoldableListActivity.class);
+                    intent.putExtra("photoInfoList", getMySelf);
+                    getActivity().startActivity(intent);
+                }
             }
         });
         return v;

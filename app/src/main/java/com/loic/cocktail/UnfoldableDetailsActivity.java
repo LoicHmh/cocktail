@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +42,15 @@ public class UnfoldableDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unfoldable_details);
        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //透明状态栏  
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
+            Window window=getWindow();
+            // Translucent status bar  
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
 
         Intent intent = getIntent();
         photoInfoList = intent.getStringExtra("photoInfoList");

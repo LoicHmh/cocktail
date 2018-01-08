@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.loic.cocktail.MainActivity;
 import com.loic.cocktail.R;
@@ -27,7 +28,7 @@ import org.json.JSONObject;
  */
 
 public class SignInFragment extends Fragment {
-
+    private final static String IP="10.163.9.37";
     private final static int ONLINE=1;
     private final static int OFFLINE=0;
     private EditText usrnameEditText;
@@ -115,7 +116,7 @@ public class SignInFragment extends Fragment {
             public void onClick(View v) {
                 switch (state){
                     case ONLINE:
-                        signInButton.setText("登录");
+                        signInButton.setText("登 录");
                         state=OFFLINE;
                         usrnameEditText.setFocusable(true);
                         usrnameEditText.setFocusableInTouchMode(true);
@@ -126,7 +127,7 @@ public class SignInFragment extends Fragment {
                         EventBus.getDefault().post(new MyEvent("OFFLINE",0));
                         break;
                     case OFFLINE:
-                        signInButton.setText("退出");
+                        signInButton.setText("退 出");
                         state=ONLINE;
                         usrInfoJson=new JSONObject();
                         try{
@@ -140,10 +141,10 @@ public class SignInFragment extends Fragment {
                         passwordEditText.setFocusable(false);
                         passwordEditText.setFocusableInTouchMode(false);
                         passwordLayout.setVisibility(View.INVISIBLE);
-                        EventBus.getDefault().post(new MyEvent("ONLINE",0));//传给mainActivity
-                        EventBus.getDefault().post(new MyEvent(usrInfoJson.toString(),1));//传给mainActivity
+                        //EventBus.getDefault().post(new MyEvent("ONLINE",0));//传给mainActivity
+                        //EventBus.getDefault().post(new MyEvent(usrInfoJson.toString(),1));//传给mainActivity
 
-                        final String url1="http://192.168.1.112:8080/transfer_server?type=1&usrname="+usrname+"&password="+password;
+                        final String url1="http://"+IP+":8080/transfer_server?type=1&usrname="+usrname+"&password="+password;
                         doGet(url1);
                         break;
                 }
@@ -158,13 +159,38 @@ public class SignInFragment extends Fragment {
             public void run() {
                 //访问网络要在子线程中实现，使用get取数据
                 final String state= NetUtil.loginOfGet(url);
+                try {
+                    final JSONObject temp = new JSONObject(state);
+                    final int i = temp.getInt("ok");
+                    final String data;
+                    if (i==1)
+                        data = temp.getString("data");
+                    else
+                        data = null;
+                    //执行在主线程上
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            if (i==1){
+                                EventBus.getDefault().post(new MyEvent("ONLINE",0));//传给mainActivity
+                                EventBus.getDefault().post(new MyEvent(usrInfoJson.toString(),1));//传给mainActivity
+                                EventBus.getDefault().post(new MyEvent(data,6));
+                            }else if (i==2){
+                                EventBus.getDefault().post(new MyEvent("ONLINE",0));//传给mainActivity
+                                EventBus.getDefault().post(new MyEvent(usrInfoJson.toString(),1));//传给mainActivity
+                                EventBus.getDefault().post(new MyEvent(null,6));
+                                Toast.makeText(getActivity(),"欢迎新用户！",Toast.LENGTH_LONG).show();
+                            }else {
+                                EventBus.getDefault().post(new MyEvent(null,1));//传给mainActivity
+                                EventBus.getDefault().post(new MyEvent(null,6));
 
-                //执行在主线程上
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        EventBus.getDefault().post(new MyEvent(state,6));
-                    }
-                });
+                                Toast.makeText(getActivity(),"用户名或密码不正确！",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
             }
         }).start();
 

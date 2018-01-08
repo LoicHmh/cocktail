@@ -4,6 +4,7 @@ package com.loic.cocktail;
  * Created by 胡敏浩 on 2018/1/6.
  */
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.loic.cocktail.eventbus.MyEvent;
 import com.loic.cocktail.fragment.FriendsFragment;
@@ -41,6 +44,15 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //透明状态栏  
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
+            Window window=getWindow();
+            // Translucent status bar  
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
 
         //实例化
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -118,6 +130,9 @@ public class MainActivity extends FragmentActivity {
                 this.setState(1);
             else
                 this.setState(0);
+        }else if (tag == 8){
+            this.setState(0);
+            this.setInfo("");
         }
     }
 
